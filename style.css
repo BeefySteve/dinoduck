@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+
+body {
+  font-family: 'Orbitron', Arial, sans-serif;
+  background: #1976d2;
+  color: #006064;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* Sci-fi shapes overlay */
+  background-image:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 40px),
+    repeating-linear-gradient(225deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 40px),
+    radial-gradient(circle at 20% 30%, rgba(0,255,255,0.10) 0 60px, transparent 70px),
+    radial-gradient(circle at 80% 70%, rgba(255,0,255,0.10) 0 80px, transparent 100px),
+    radial-gradient(circle at 60% 20%, rgba(255,255,255,0.07) 0 40px, transparent 60px);
+  background-blend-mode: lighten, lighten, screen, screen, lighten;
+}
+
+#top-bar {
+  margin-top: 0;
+  padding-top: 20px;
+  transition: opacity 0.3s;
+}
+
+#top-bar.hidden {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+}
+
+h1 {
+  margin-top: 20px;
+  font-size: 2.5em;
+  color: #ff7043;
+}
+
+#game-menu {
+  margin: 20px auto;
+  padding: 10px;
+}
+
+#game-container {
+  margin: 32px auto 0 auto;
+  padding: 32px 16px;
+  background: #fffde7;
+  border-radius: 24px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+  max-width: 480px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+}
+
+button {
+  background: #ffb300;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 18px 32px;
+  font-size: 1.5em;
+  cursor: pointer;
+  margin: 10px;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+button:hover, button:focus {
+  background: #ff7043;
+  transform: scale(1.05);
+}
+
+input[type="number"] {
+  font-size: 1.5em;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #b2ebf2;
+  width: 80px;
+  text-align: center;
+  margin: 10px;
+}
+
+/* Hide number input spinners for all browsers */
+input[type='number'], input[type='text'][inputmode='numeric'] {
+  -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  #game-container {
+    max-width: 98vw;
+    min-height: 60vw;
+    padding: 8vw 2vw;
+    font-size: 1.1em;
+  }
+  button {
+    font-size: 1.1em;
+    padding: 12px 16px;
+  }
+} 
