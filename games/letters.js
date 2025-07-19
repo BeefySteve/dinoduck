@@ -76,12 +76,23 @@ export function init(container, options = {}) {
 
   function nextItem() {
     container.innerHTML = '';
+    // Score counter
+    const scoreCounter = document.createElement('div');
+    scoreCounter.style.position = 'absolute';
+    scoreCounter.style.top = '16px';
+    scoreCounter.style.right = '24px';
+    scoreCounter.style.fontSize = '1.1em';
+    scoreCounter.style.fontWeight = 'bold';
+    scoreCounter.textContent = `Score: ${score}`;
+    container.appendChild(scoreCounter);
     // Level title
     const levelTitle = document.createElement('h3');
     levelTitle.textContent = LEVELS[levelIdx].name;
     container.appendChild(levelTitle);
     const remaining = shuffledItems.filter((_, i) => !usedIndexes.includes(i));
     if (remaining.length === 0 || questionNum === 10) {
+      // 8 questions per level
+      if (questionNum < 8 && remaining.length > 0) return;
       // Level complete
       levelIdx++;
       if (levelIdx < LEVELS.length) {
@@ -120,14 +131,17 @@ export function init(container, options = {}) {
       btn.textContent = letter;
       btn.style.fontSize = '2em';
       btn.onclick = () => {
+        // Disable all buttons immediately
+        Array.from(btnRow.children).forEach(b => b.disabled = true);
         if (letter === correctLetter) {
           score++;
           questionNum++;
-          nextItem();
+          scoreCounter.textContent = `Score: ${score}`;
+          setTimeout(() => nextItem(), 1000);
         } else {
           lastWrongItem = item;
           lastWrongLetter = correctLetter;
-          endGame();
+          setTimeout(() => endGame(), 1000);
         }
       };
       btnRow.appendChild(btn);

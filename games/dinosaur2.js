@@ -1,67 +1,28 @@
-// Maths Addition Minigame with Sequential Levels
+// Dinosaur 2 Spelling Game (Three-letter emoji names)
 let cleanup = null;
 
-let lastWrongA = null;
-let lastWrongB = null;
-
-const LEVELS = [
-  {
-    name: 'Level 1',
-    description: 'Total ≤ 10',
-    gen: () => {
-      let a, b;
-      do {
-        a = Math.floor(Math.random() * 10) + 1;
-        b = Math.floor(Math.random() * 10) + 1;
-      } while (a + b > 10);
-      return [a, b];
-    },
-  },
-  {
-    name: 'Level 2',
-    description: 'Single digits only',
-    gen: () => {
-      let a = Math.floor(Math.random() * 9) + 1;
-      let b = Math.floor(Math.random() * 9) + 1;
-      return [a, b];
-    },
-  },
-  {
-    name: 'Level 3',
-    description: 'Total ≤ 20',
-    gen: () => {
-      let a, b;
-      do {
-        a = Math.floor(Math.random() * 20) + 1;
-        b = Math.floor(Math.random() * 20) + 1;
-      } while (a + b > 20);
-      return [a, b];
-    },
-  },
-  {
-    name: 'Level 4',
-    description: 'Total ≤ 30',
-    gen: () => {
-      let a, b;
-      do {
-        a = Math.floor(Math.random() * 30) + 1;
-        b = Math.floor(Math.random() * 30) + 1;
-      } while (a + b > 30);
-      return [a, b];
-    },
-  },
-  {
-    name: 'Level 5',
-    description: 'Total ≤ 40',
-    gen: () => {
-      let a, b;
-      do {
-        a = Math.floor(Math.random() * 40) + 1;
-        b = Math.floor(Math.random() * 40) + 1;
-      } while (a + b > 40);
-      return [a, b];
-    },
-  },
+const ITEMS = [
+  { name: 'dog', emoji: '🐶' },
+  { name: 'cat', emoji: '🐱' },
+  { name: 'car', emoji: '🚗' },
+  { name: 'sun', emoji: '☀️' },
+  { name: 'bus', emoji: '🚌' },
+  { name: 'egg', emoji: '🥚' },
+  { name: 'fox', emoji: '🦊' },
+  { name: 'cow', emoji: '🐮' },
+  { name: 'ant', emoji: '🐜' },
+  { name: 'bat', emoji: '🦇' },
+  { name: 'owl', emoji: '🦉' },
+  { name: 'bee', emoji: '🐝' },
+  { name: 'pig', emoji: '🐷' },
+  { name: 'rat', emoji: '🐀' },
+  { name: 'ram', emoji: '🐏' },
+  { name: 'hen', emoji: '🐔' },
+  { name: 'yak', emoji: '🐂' },
+  { name: 'emu', emoji: '🦤' },
+  { name: 'ape', emoji: '🦍' },
+  { name: 'bug', emoji: '🐛' },
+  { name: 'poo', emoji: '💩' },
 ];
 
 export function init(container, options = {}) {
@@ -70,16 +31,33 @@ export function init(container, options = {}) {
   dinoIcon.textContent = '🦖';
   dinoIcon.style.fontSize = '3em';
   dinoIcon.style.marginBottom = '10px';
+  const title = document.createElement('h2');
+  title.textContent = 'Dinosaur 2';
+  container.appendChild(dinoIcon);
+  container.appendChild(title);
+  const startBtn = document.createElement('button');
+  startBtn.textContent = 'Start';
+  container.appendChild(startBtn);
 
-  let gameActive = false;
   let score = 0;
-  let levelIdx = 0;
   let questionNum = 0;
-  // Remove reset from here
-  // lastWrongA = null;
-  // lastWrongB = null;
+  let shuffled = [];
+  let lastWrong = null;
 
-  function startLevel() {
+  function startGame() {
+    score = 0;
+    questionNum = 0;
+    lastWrong = null;
+    // Shuffle all items
+    shuffled = ITEMS.slice();
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    nextQuestion();
+  }
+
+  function nextQuestion() {
     container.innerHTML = '';
     // Score counter
     const scoreCounter = document.createElement('div');
@@ -90,18 +68,25 @@ export function init(container, options = {}) {
     scoreCounter.style.fontWeight = 'bold';
     scoreCounter.textContent = `Score: ${score}`;
     container.appendChild(scoreCounter);
-    const levelTitle = document.createElement('h3');
-    levelTitle.textContent = LEVELS[levelIdx].name;
-    container.appendChild(levelTitle);
-    const questionDiv = document.createElement('div');
-    questionDiv.style.margin = '10px 0';
-    container.appendChild(questionDiv);
+    // Pick item
+    const item = shuffled[questionNum];
+    // Show emoji
+    const emojiDiv = document.createElement('div');
+    emojiDiv.textContent = item.emoji;
+    emojiDiv.style.fontSize = '4em';
+    emojiDiv.style.margin = '30px 0 20px 0';
+    container.appendChild(emojiDiv);
+    // Input
     const input = document.createElement('input');
     input.type = 'text';
-    input.inputMode = 'numeric';
-    input.pattern = '[0-9]*';
+    input.maxLength = 3;
     input.autofocus = true;
-    input.setAttribute('aria-label', 'Your answer');
+    input.setAttribute('aria-label', 'Type the name');
+    input.style.fontSize = '1.2em';
+    input.style.width = '140px';
+    input.style.textTransform = 'lowercase';
+    input.style.letterSpacing = '0.2em';
+    setTimeout(() => input.focus(), 0);
     container.appendChild(input);
     const submit = document.createElement('button');
     submit.textContent = 'Check!';
@@ -109,16 +94,6 @@ export function init(container, options = {}) {
     const feedback = document.createElement('div');
     feedback.style.marginTop = '10px';
     container.appendChild(feedback);
-
-    let a, b;
-    function newQuestion() {
-      [a, b] = LEVELS[levelIdx].gen();
-      questionDiv.textContent = `${a} + ${b}`;
-      input.value = '';
-      feedback.textContent = '';
-      input.focus();
-      scoreCounter.textContent = `Score: ${score}`;
-    }
 
     function showLevelUpCelebration(next) {
       container.innerHTML = '';
@@ -146,34 +121,30 @@ export function init(container, options = {}) {
       }, 200);
     }
 
-    function endGame(wrongA = null, wrongB = null) {
-      gameActive = false;
+    function endGame() {
       container.innerHTML = '';
       container.appendChild(dinoIcon);
       const endMsg = document.createElement('h2');
       endMsg.textContent = `Game Over! Your score: ${score}`;
       container.appendChild(endMsg);
-      if (wrongA !== null && wrongB !== null) {
+      if (lastWrong) {
         const correctMsg = document.createElement('div');
         correctMsg.style.margin = '16px 0';
         correctMsg.style.fontSize = '1.2em';
-        correctMsg.textContent = `Correct answer: ${wrongA} + ${wrongB} = ${wrongA + wrongB}`;
+        correctMsg.innerHTML = `Correct answer: <b>${lastWrong.word}</b> <span style="font-size:2em;vertical-align:middle;">${lastWrong.emoji}</span>`;
         container.appendChild(correctMsg);
       }
       const retryBtn = document.createElement('button');
       retryBtn.textContent = '🔄 Play Again';
-      retryBtn.style.marginBottom = '12px';
       retryBtn.onclick = () => {
         score = 0;
-        levelIdx = 0;
         questionNum = 0;
-        init(container, options);
+        lastWrong = null;
+        startGame();
       };
       container.appendChild(retryBtn);
-      // Always show Exit button after Play Again
       const exitBtn = document.createElement('button');
       exitBtn.textContent = '🏠 Back to Menu';
-      exitBtn.style.marginTop = '12px';
       exitBtn.onclick = () => {
         if (options.onExit) options.onExit();
       };
@@ -184,33 +155,20 @@ export function init(container, options = {}) {
       if (submit.disabled) return;
       submit.disabled = true;
       input.disabled = true;
-      const val = parseInt(input.value.replace(/[^0-9]/g, ''), 10);
-      if (val === a + b) {
+      const val = input.value.trim().toLowerCase();
+      if (val === item.name) {
         score++;
         questionNum++;
-        if (questionNum === 8) {
-          levelIdx++;
-          questionNum = 0;
-          if (levelIdx < LEVELS.length) {
-            showLevelUpCelebration(() => startLevel());
-          } else {
-            feedback.textContent = 'You completed all levels! 🏆';
-            setTimeout(() => {
-              endGame();
-            }, 1200);
-          }
+        scoreCounter.textContent = `Score: ${score}`;
+        if (questionNum === shuffled.length) {
+          setTimeout(() => endGame(), 1000);
         } else {
-          setTimeout(() => {
-            submit.disabled = false;
-            input.disabled = false;
-            newQuestion();
-          }, 1000);
+          setTimeout(() => nextQuestion(), 1000);
         }
       } else {
+        lastWrong = { word: item.name, emoji: item.emoji };
         feedback.textContent = 'Wrong! Game Over.';
-        setTimeout(() => {
-          endGame(a, b);
-        }, 1000);
+        setTimeout(() => endGame(), 1000);
       }
     }
 
@@ -218,18 +176,11 @@ export function init(container, options = {}) {
     input.onkeydown = e => {
       if (e.key === 'Enter') checkAnswer();
     };
-
-    newQuestion();
   }
 
-  gameActive = true;
-  score = 0;
-  levelIdx = 0;
-  questionNum = 0;
-  startLevel();
+  startBtn.onclick = startGame;
 
   cleanup = () => {
-    gameActive = false;
     container.innerHTML = '';
   };
 }
