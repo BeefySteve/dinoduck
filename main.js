@@ -1,3 +1,6 @@
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js');
+}
 // Game registry
 const games = [
   // Dinosaur games
