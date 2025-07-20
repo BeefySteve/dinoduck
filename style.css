@@ -95,15 +95,20 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+#game-container > div[style*="position: absolute"] {
+  color: #ffb300 !important;
+  text-shadow: 1px 1px 4px #fffde7, 0 0 2px #1976d2;
+}
+
 @media (max-width: 600px) {
   #game-container {
     max-width: 98vw;
     min-height: 60vw;
     padding: 8vw 2vw;
-    font-size: 1.1em;
+    font-size: 1.35em;
   }
   button {
-    font-size: 1.1em;
-    padding: 12px 16px;
+    font-size: 1.25em;
+    padding: 16px 20px;
   }
 } 

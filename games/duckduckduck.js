@@ -98,25 +98,36 @@ export function init(container, options = {}) {
       emojiBtn.style.boxShadow = '0 0 0 4px #4dd0e1';
       score++;
       scoreCounter.textContent = `Score: ${score}`;
-      // Animate whizzing off screen
+      // More complex animation: curve, spin, scale, and fly off
       const directions = [
-        { x: 120, y: 0 },   // right
-        { x: -120, y: 0 },  // left
-        { x: 0, y: -120 },  // up
-        { x: 0, y: 120 },   // down
-        { x: 100, y: -100 }, // up-right
-        { x: -100, y: -100 }, // up-left
-        { x: 100, y: 100 }, // down-right
-        { x: -100, y: 100 } // down-left
+        { x: 120, y: 0, rot: 720 },   // right
+        { x: -120, y: 0, rot: -720 },  // left
+        { x: 0, y: -120, rot: 540 },  // up
+        { x: 0, y: 120, rot: -540 },   // down
+        { x: 100, y: -100, rot: 900 }, // up-right
+        { x: -100, y: -100, rot: -900 }, // up-left
+        { x: 100, y: 100, rot: 1080 }, // down-right
+        { x: -100, y: 100, rot: -1080 } // down-left
       ];
       const dir = directions[Math.floor(Math.random() * directions.length)];
-      emojiBtn.style.transition = 'transform 0.7s cubic-bezier(.7,-0.2,.7,1.5), opacity 0.7s';
+      emojiBtn.style.transition = 'transform 1.1s cubic-bezier(.7,-0.2,.7,1.5), opacity 1.1s';
       emojiBtn.style.zIndex = '10';
+      // Animate with a curve and spin
+      emojiBtn.animate([
+        { transform: 'scale(1) rotate(0deg)', offset: 0 },
+        { transform: `translate(${dir.x/3}vw, ${dir.y/3}vh) scale(1.2) rotate(${dir.rot/3}deg)`, offset: 0.3 },
+        { transform: `translate(${dir.x*0.7}vw, ${dir.y*0.7}vh) scale(0.8) rotate(${dir.rot*0.7}deg)`, offset: 0.7 },
+        { transform: `translate(${dir.x}vw, ${dir.y}vh) scale(1.5) rotate(${dir.rot}deg)`, opacity: 0, offset: 1 }
+      ], {
+        duration: 1100,
+        fill: 'forwards',
+        easing: 'cubic-bezier(.7,-0.2,.7,1.5)'
+      });
       setTimeout(() => {
-        emojiBtn.style.transform = `translate(${dir.x}vw, ${dir.y}vh) scale(1.5)`;
+        emojiBtn.style.transform = `translate(${dir.x}vw, ${dir.y}vh) scale(1.5) rotate(${dir.rot}deg)`;
         emojiBtn.style.opacity = '0';
       }, 30);
-      setTimeout(() => nextRound(), 1000);
+      setTimeout(() => nextRound(), 1100);
     };
     tapArea.onclick = (e) => {
       if (tapped) return;

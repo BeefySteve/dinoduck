@@ -19,6 +19,11 @@ const games = [
     name: 'Dinosaur 3',
     module: () => import('./games/dinosaur3.js'),
   },
+  {
+    id: 'dinosaur4',
+    name: 'Dinosaur 4',
+    module: () => import('./games/dinosaur4.js'),
+  },
   // Duck games
   {
     id: 'letters',
@@ -68,6 +73,10 @@ function renderMenu() {
     } else if (game.id === 'dinosaur3') {
       btn.textContent = '🦖3';
       btn.title = 'Dinosaur 3';
+      btn.style.fontSize = '2em';
+    } else if (game.id === 'dinosaur4') {
+      btn.textContent = '🦖4';
+      btn.title = 'Dinosaur 4';
       btn.style.fontSize = '2em';
     } else if (game.id === 'letters') {
       btn.textContent = '🦆';

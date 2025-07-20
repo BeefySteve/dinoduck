@@ -7,6 +7,7 @@ const LEVELS = [
     ops: ['+'],
     a: () => Math.floor(Math.random() * 9) + 1,
     b: () => Math.floor(Math.random() * 9) + 1,
+    sumLimit: 10,
   },
   {
     name: 'Level 2',
@@ -17,20 +18,20 @@ const LEVELS = [
   {
     name: 'Level 3',
     ops: ['+', '-', '×'],
-    a: () => Math.floor(Math.random() * 9) + 1,
+    a: (op) => op === '×' ? Math.floor(Math.random() * 3) + 1 : Math.floor(Math.random() * 9) + 1,
     b: (op) => op === '×' ? Math.floor(Math.random() * 3) + 1 : Math.floor(Math.random() * 9) + 1,
   },
   {
     name: 'Level 4',
     ops: ['+', '-', '×'],
-    a: (op) => op === '×' ? Math.floor(Math.random() * 5) + 1 : Math.floor(Math.random() * 15) + 1,
-    b: (op) => op === '×' ? Math.floor(Math.random() * 5) + 1 : Math.floor(Math.random() * 15) + 1,
+    a: (op) => op === '-' ? Math.floor(Math.random() * 12) + 1 : (op === '×' ? Math.floor(Math.random() * 5) + 1 : Math.floor(Math.random() * 15) + 1),
+    b: (op) => op === '-' ? Math.floor(Math.random() * 12) + 1 : (op === '×' ? Math.floor(Math.random() * 5) + 1 : Math.floor(Math.random() * 15) + 1),
   },
   {
     name: 'Level 5',
     ops: ['+', '-', '×'],
-    a: (op) => op === '×' ? Math.floor(Math.random() * 6) + 1 : Math.floor(Math.random() * 20) + 1,
-    b: (op) => op === '×' ? Math.floor(Math.random() * 6) + 1 : Math.floor(Math.random() * 20) + 1,
+    a: (op) => op === '-' ? Math.floor(Math.random() * 15) + 1 : (op === '×' ? Math.floor(Math.random() * 6) + 1 : Math.floor(Math.random() * 20) + 1),
+    b: (op) => op === '-' ? Math.floor(Math.random() * 15) + 1 : (op === '×' ? Math.floor(Math.random() * 6) + 1 : Math.floor(Math.random() * 20) + 1),
   },
 ];
 
@@ -76,8 +77,17 @@ export function init(container, options = {}) {
     // Generate question
     const ops = LEVELS[levelIdx].ops;
     const op = ops[Math.floor(Math.random() * ops.length)];
-    const a = LEVELS[levelIdx].a(op);
-    const b = typeof LEVELS[levelIdx].b === 'function' ? LEVELS[levelIdx].b(op) : LEVELS[levelIdx].b;
+    let a, b;
+    if (levelIdx === 0 && op === '+') {
+      // Level 1: only allow a + b <= 10
+      do {
+        a = LEVELS[levelIdx].a(op);
+        b = LEVELS[levelIdx].b(op);
+      } while (a + b > LEVELS[levelIdx].sumLimit);
+    } else {
+      a = LEVELS[levelIdx].a(op);
+      b = typeof LEVELS[levelIdx].b === 'function' ? LEVELS[levelIdx].b(op) : LEVELS[levelIdx].b;
+    }
     let question, answer;
     if (op === '+') {
       question = `${a} + ${b}`;
