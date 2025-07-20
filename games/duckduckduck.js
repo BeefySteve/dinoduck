@@ -98,6 +98,24 @@ export function init(container, options = {}) {
       emojiBtn.style.boxShadow = '0 0 0 4px #4dd0e1';
       score++;
       scoreCounter.textContent = `Score: ${score}`;
+      // Animate whizzing off screen
+      const directions = [
+        { x: 120, y: 0 },   // right
+        { x: -120, y: 0 },  // left
+        { x: 0, y: -120 },  // up
+        { x: 0, y: 120 },   // down
+        { x: 100, y: -100 }, // up-right
+        { x: -100, y: -100 }, // up-left
+        { x: 100, y: 100 }, // down-right
+        { x: -100, y: 100 } // down-left
+      ];
+      const dir = directions[Math.floor(Math.random() * directions.length)];
+      emojiBtn.style.transition = 'transform 0.7s cubic-bezier(.7,-0.2,.7,1.5), opacity 0.7s';
+      emojiBtn.style.zIndex = '10';
+      setTimeout(() => {
+        emojiBtn.style.transform = `translate(${dir.x}vw, ${dir.y}vh) scale(1.5)`;
+        emojiBtn.style.opacity = '0';
+      }, 30);
       setTimeout(() => nextRound(), 1000);
     };
     tapArea.onclick = (e) => {

@@ -1,7 +1,7 @@
 {
   "name": "DinoDuck Kids Games",
   "short_name": "DinoDuck",
-  "start_url": ".",
+  "start_url": "/dinoduck/",
   "display": "standalone",
   "background_color": "#1976d2",
   "theme_color": "#1976d2",
