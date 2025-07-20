@@ -1,5 +1,5 @@
 const BASE = "/dinoduck/";
-const CACHE_NAME = "dinoduck-v5";
+const CACHE_NAME = "dinoduck-v6";
 const urlsToCache = [
   BASE,
   BASE + "index.html",
