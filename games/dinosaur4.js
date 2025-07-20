@@ -79,9 +79,13 @@ export function init(container, options = {}) {
     container.appendChild(levelTitle);
     // Pick letter
     const letter = shuffled[questionNum % shuffled.length];
+    // Use single-storey a and g for outline
+    let displayLetter = letter;
+    if (letter === 'a') displayLetter = 'ɑ';
+    if (letter === 'g') displayLetter = 'ɡ';
     // Show letter outline (big, faint)
     const letterOutline = document.createElement('div');
-    letterOutline.textContent = letter;
+    letterOutline.textContent = displayLetter;
     letterOutline.style.fontSize = letter.length === 1 ? '7em' : (letter.length === 2 ? '5em' : '3.5em');
     letterOutline.style.opacity = '0.15';
     letterOutline.style.position = 'absolute';
