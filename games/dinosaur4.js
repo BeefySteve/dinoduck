@@ -89,7 +89,7 @@ export function init(container, options = {}) {
     letterOutline.style.top = '50%';
     letterOutline.style.transform = 'translate(-50%, -50%)';
     letterOutline.style.pointerEvents = 'none';
-    letterOutline.style.fontFamily = "'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT Bold', 'Segoe Print', 'Segoe Script', 'cursive', sans-serif";
+    letterOutline.style.fontFamily = "'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT Bold', sans-serif";
     // Canvas for drawing
     const canvasWrap = document.createElement('div');
     canvasWrap.style.position = 'relative';
