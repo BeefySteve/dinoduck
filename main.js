@@ -14,6 +14,11 @@ const games = [
     name: 'Dinosaur 2',
     module: () => import('./games/dinosaur2.js'),
   },
+  {
+    id: 'dinosaur3',
+    name: 'Dinosaur 3',
+    module: () => import('./games/dinosaur3.js'),
+  },
   // Duck games
   {
     id: 'letters',
@@ -24,6 +29,11 @@ const games = [
     id: 'counting',
     name: 'Duck Duck',
     module: () => import('./games/counting.js'),
+  },
+  {
+    id: 'duckduckduck',
+    name: 'Duck Duck Duck',
+    module: () => import('./games/duckduckduck.js'),
   },
   // Add more games here
 ];
@@ -55,6 +65,10 @@ function renderMenu() {
       btn.textContent = '🦖2';
       btn.title = 'Dinosaur 2';
       btn.style.fontSize = '2em';
+    } else if (game.id === 'dinosaur3') {
+      btn.textContent = '🦖3';
+      btn.title = 'Dinosaur 3';
+      btn.style.fontSize = '2em';
     } else if (game.id === 'letters') {
       btn.textContent = '🦆';
       btn.title = 'Duck Letters';
@@ -62,6 +76,10 @@ function renderMenu() {
     } else if (game.id === 'counting') {
       btn.textContent = '🦆🦆';
       btn.title = 'Duck Duck';
+      btn.style.fontSize = '2em';
+    } else if (game.id === 'duckduckduck') {
+      btn.textContent = '🦆🦆🦆';
+      btn.title = 'Duck Duck Duck';
       btn.style.fontSize = '2em';
     } else {
       btn.textContent = game.name;
