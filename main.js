@@ -40,6 +40,11 @@ const games = [
     name: 'Duck Duck Duck',
     module: () => import('./games/duckduckduck.js'),
   },
+  {
+    id: 'duckduckduckduck',
+    name: 'Duck Duck Duck Duck',
+    module: () => import('./games/duckduckduckduck.js'),
+  },
   // Add more games here
 ];
 
@@ -89,6 +94,10 @@ function renderMenu() {
     } else if (game.id === 'duckduckduck') {
       btn.textContent = '🦆🦆🦆';
       btn.title = 'Duck Duck Duck';
+      btn.style.fontSize = '2em';
+    } else if (game.id === 'duckduckduckduck') {
+      btn.textContent = '🦆🦆🦆🦆';
+      btn.title = 'Duck Duck Duck Duck';
       btn.style.fontSize = '2em';
     } else {
       btn.textContent = game.name;

@@ -1,32 +1,39 @@
-// Dinosaur 4 - Letter Tracing Game
+// Duck Duck Duck Duck - Line Tracing Game
 let cleanup = null;
 
-const LOWER = 'abcdefghijklmnopqrstuvwxyz'.split('');
-const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
-const DIGRAPHS3 = [
-  'ch', 'sh', 'th', 'qu', 'ng', 'nk', 'ay', 'ee', 'igh', 'ow', 'oo', 'ar', 'or', 'air', 'ir', 'ou', 'oy'
+const STRAIGHT_LINES = [
+  { type: 'line', x1: 30, y1: 110, x2: 190, y2: 110 }, // horizontal
+  { type: 'line', x1: 110, y1: 30, x2: 110, y2: 190 }, // vertical
+  { type: 'line', x1: 40, y1: 40, x2: 180, y2: 180 }, // diagonal \
+  { type: 'line', x1: 180, y1: 40, x2: 40, y2: 180 }, // diagonal /
 ];
-const DIGRAPHS4 = [
-  'ea', 'oi', 'aw', 'are', 'ur', 'er', 'ow', 'ai', 'oa', 'ew', 'ire', 'ear', 'ure'
+const CURVES = [
+  { type: 'arc', x: 110, y: 110, r: 70, start: Math.PI, end: 2 * Math.PI }, // bottom half
+  { type: 'arc', x: 110, y: 110, r: 70, start: 0, end: Math.PI }, // top half
+  { type: 'arc', x: 110, y: 110, r: 70, start: Math.PI/2, end: 3*Math.PI/2 }, // left half
+  { type: 'arc', x: 110, y: 110, r: 70, start: -Math.PI/2, end: Math.PI/2 }, // right half
+];
+const SHAPES = [
+  { type: 'circle', x: 110, y: 110, r: 70 },
+  { type: 'triangle', points: [ [110,40], [40,180], [180,180] ] },
+  { type: 'square', x: 40, y: 40, size: 140 },
 ];
 
 const LEVELS = [
-  { name: 'Level 1', letters: LOWER },
-  { name: 'Level 2', letters: LOWER.concat(UPPER) },
-  { name: 'Level 3', letters: LOWER.concat(DIGRAPHS3) },
-  { name: 'Level 4', letters: LOWER.concat(DIGRAPHS3, DIGRAPHS4) }
+  { name: 'Level 1', paths: STRAIGHT_LINES },
+  { name: 'Level 2', paths: STRAIGHT_LINES.concat(CURVES) },
+  { name: 'Level 3', paths: STRAIGHT_LINES.concat(CURVES, SHAPES) }
 ];
 
 export function init(container, options = {}) {
   container.innerHTML = '';
-  const dinoIcon = document.createElement('div');
-  dinoIcon.textContent = '🦖';
-  dinoIcon.style.fontSize = '3em';
-  dinoIcon.style.marginBottom = '10px';
+  const duckIcon = document.createElement('div');
+  duckIcon.textContent = '🦆';
+  duckIcon.style.fontSize = '3em';
+  duckIcon.style.marginBottom = '10px';
   const title = document.createElement('h2');
-  title.textContent = 'Dinosaur 4';
-  container.appendChild(dinoIcon);
+  title.textContent = 'Duck Duck Duck Duck';
+  container.appendChild(duckIcon);
   container.appendChild(title);
   const startBtn = document.createElement('button');
   startBtn.textContent = 'Start';
@@ -39,8 +46,8 @@ export function init(container, options = {}) {
 
   function startLevel() {
     questionNum = 0;
-    // Shuffle letters for this level
-    shuffled = LEVELS[levelIdx].letters.slice();
+    // Shuffle paths for this level
+    shuffled = LEVELS[levelIdx].paths.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -59,7 +66,7 @@ export function init(container, options = {}) {
     scoreCounter.style.fontWeight = 'bold';
     scoreCounter.textContent = `Score: ${score}`;
     container.appendChild(scoreCounter);
-    // End Game button (only for Dinosaur 4)
+    // End Game button
     const endGameBtn = document.createElement('button');
     endGameBtn.textContent = 'End Game';
     endGameBtn.style.display = 'block';
@@ -77,19 +84,14 @@ export function init(container, options = {}) {
     const levelTitle = document.createElement('h3');
     levelTitle.textContent = LEVELS[levelIdx].name;
     container.appendChild(levelTitle);
-    // Pick letter
-    const letter = shuffled[questionNum % shuffled.length];
-    // Show letter outline (big, faint)
-    const letterOutline = document.createElement('div');
-    letterOutline.textContent = letter;
-    letterOutline.style.fontSize = letter.length === 1 ? '7em' : (letter.length === 2 ? '5em' : '3.5em');
-    letterOutline.style.opacity = '0.15';
-    letterOutline.style.position = 'absolute';
-    letterOutline.style.left = '50%';
-    letterOutline.style.top = '50%';
-    letterOutline.style.transform = 'translate(-50%, -50%)';
-    letterOutline.style.pointerEvents = 'none';
-    letterOutline.style.fontFamily = "'Comic Sans MS', 'Comic Sans', 'Arial Rounded MT Bold', 'Segoe Print', 'Segoe Script', 'cursive', sans-serif";
+    // Pick path
+    let path;
+    if (levelIdx < 2) {
+      path = shuffled[questionNum % shuffled.length];
+    } else {
+      // Level 3: unlimited
+      path = shuffled[Math.floor(Math.random() * shuffled.length)];
+    }
     // Canvas for drawing
     const canvasWrap = document.createElement('div');
     canvasWrap.style.position = 'relative';
@@ -100,7 +102,6 @@ export function init(container, options = {}) {
     canvasWrap.style.borderRadius = '16px';
     canvasWrap.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
     canvasWrap.style.touchAction = 'none';
-    canvasWrap.appendChild(letterOutline);
     const canvas = document.createElement('canvas');
     canvas.width = 220;
     canvas.height = 220;
@@ -111,11 +112,41 @@ export function init(container, options = {}) {
     canvas.style.touchAction = 'none';
     canvasWrap.appendChild(canvas);
     container.appendChild(canvasWrap);
-    // Drawing logic
+    // Draw the path
     const ctx = canvas.getContext('2d');
-    ctx.lineWidth = 8;
+    ctx.lineWidth = 7;
     ctx.lineCap = 'round';
+    ctx.strokeStyle = '#bdbdbd';
+    ctx.globalAlpha = 0.5;
+    if (path.type === 'line') {
+      ctx.beginPath();
+      ctx.moveTo(path.x1, path.y1);
+      ctx.lineTo(path.x2, path.y2);
+      ctx.stroke();
+    } else if (path.type === 'arc') {
+      ctx.beginPath();
+      ctx.arc(path.x, path.y, path.r, path.start, path.end);
+      ctx.stroke();
+    } else if (path.type === 'circle') {
+      ctx.beginPath();
+      ctx.arc(path.x, path.y, path.r, 0, 2 * Math.PI);
+      ctx.stroke();
+    } else if (path.type === 'triangle') {
+      ctx.beginPath();
+      ctx.moveTo(path.points[0][0], path.points[0][1]);
+      ctx.lineTo(path.points[1][0], path.points[1][1]);
+      ctx.lineTo(path.points[2][0], path.points[2][1]);
+      ctx.closePath();
+      ctx.stroke();
+    } else if (path.type === 'square') {
+      ctx.beginPath();
+      ctx.rect(path.x, path.y, path.size, path.size);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    // Drawing logic
     ctx.strokeStyle = '#1976d2';
+    ctx.lineWidth = 8;
     let drawing = false;
     let last = null;
     function getPos(e) {
@@ -167,10 +198,10 @@ export function init(container, options = {}) {
       score++;
       questionNum++;
       scoreCounter.textContent = `Score: ${score}`;
-      if (levelIdx < 3 && questionNum === 8) {
+      if (levelIdx < 2 && questionNum === 8) {
         levelIdx++;
         setTimeout(() => showLevelUpCelebration(() => startLevel()), 300);
-      } else if (levelIdx < 3) {
+      } else if (levelIdx < 2) {
         setTimeout(() => nextQuestion(), 300);
       } else {
         setTimeout(() => nextQuestion(), 300);
@@ -184,12 +215,12 @@ export function init(container, options = {}) {
     container.style.transition = 'background 0.2s';
     let flashes = 0;
     const maxFlashes = 6;
-    const dinoDance = document.createElement('div');
-    dinoDance.textContent = '🦖💃';
-    dinoDance.style.fontSize = '4em';
-    dinoDance.style.margin = '40px 0';
-    dinoDance.style.animation = 'dino-dance 1.2s linear';
-    container.appendChild(dinoDance);
+    const duckDance = document.createElement('div');
+    duckDance.textContent = '🦆💃';
+    duckDance.style.fontSize = '4em';
+    duckDance.style.margin = '40px 0';
+    duckDance.style.animation = 'dino-dance 1.2s linear';
+    container.appendChild(duckDance);
     const style = document.createElement('style');
     style.textContent = `@keyframes dino-dance { 0%{transform:translateX(0);} 20%{transform:translateX(-20px);} 40%{transform:translateX(20px);} 60%{transform:translateX(-20px);} 80%{transform:translateX(20px);} 100%{transform:translateX(0);} }`;
     document.head.appendChild(style);
@@ -207,7 +238,7 @@ export function init(container, options = {}) {
 
   function endGame() {
     container.innerHTML = '';
-    container.appendChild(dinoIcon);
+    container.appendChild(duckIcon);
     const endMsg = document.createElement('h2');
     endMsg.textContent = `Game Over! Your score: ${score}`;
     container.appendChild(endMsg);
