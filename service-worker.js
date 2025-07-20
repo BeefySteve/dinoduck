@@ -1,16 +1,17 @@
-const CACHE_NAME = "dinoduck-v1";
+const BASE = "/dinoduck/";
+const CACHE_NAME = "dinoduck-v2";
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/style.css",
-  "/main.js",
-  "/games/maths.js",
-  "/games/letters.js",
-  "/games/counting.js",
-  "/games/dinosaur2.js",
-  "/manifest.json",
-  "/icon-192.png",
-  "/icon-512.png"
+  BASE,
+  BASE + "index.html",
+  BASE + "style.css",
+  BASE + "main.js",
+  BASE + "games/maths.js",
+  BASE + "games/letters.js",
+  BASE + "games/counting.js",
+  BASE + "games/dinosaur2.js",
+  BASE + "manifest.json",
+  BASE + "icon-192.png",
+  BASE + "icon-512.png"
 ];
 
 self.addEventListener("install", event => {
