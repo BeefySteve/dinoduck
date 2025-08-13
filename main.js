@@ -1,5 +1,29 @@
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/dinoduck/service-worker.js');
+  navigator.serviceWorker.register('/dinoduck/service-worker.js')
+    .then(registration => {
+      console.log('SW registered: ', registration);
+      
+      // Check for updates
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // New version available
+            if (confirm('A new version is available! Reload to update?')) {
+              window.location.reload();
+            }
+          }
+        });
+      });
+      
+      // Listen for controller change (when new SW takes over)
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('New service worker activated');
+      });
+    })
+    .catch(registrationError => {
+      console.log('SW registration failed: ', registrationError);
+    });
 }
 // Game registry
 const games = [
