@@ -1,5 +1,5 @@
 const BASE = "/dinoduck/";
-const CACHE_NAME = "dinoduck-v7";
+const CACHE_NAME = "dinoduck-v10";
 const urlsToCache = [
   BASE,
   BASE + "index.html",
@@ -13,6 +13,7 @@ const urlsToCache = [
   BASE + "games/dinosaur4.js",
   BASE + "games/duckduckduck.js",
   BASE + "games/duckduckduckduck.js",
+  BASE + "games/train.js",
   BASE + "manifest.json",
   BASE + "icon-192.png",
   BASE + "icon-512.png"

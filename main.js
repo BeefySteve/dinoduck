@@ -40,12 +40,17 @@ const games = [
     name: 'Duck Duck Duck',
     module: () => import('./games/duckduckduck.js'),
   },
-  {
-    id: 'duckduckduckduck',
-    name: 'Duck Duck Duck Duck',
-    module: () => import('./games/duckduckduckduck.js'),
-  },
-  // Add more games here
+          {
+          id: 'duckduckduckduck',
+          name: 'Duck Duck Duck Duck',
+          module: () => import('./games/duckduckduckduck.js'),
+        },
+        {
+          id: 'train',
+          name: 'Train',
+          module: () => import('./games/train.js'),
+        },
+        // Add more games here
 ];
 
 const gameMenu = document.getElementById('game-menu');
@@ -95,13 +100,17 @@ function renderMenu() {
       btn.textContent = '🦆🦆🦆';
       btn.title = 'Duck Duck Duck';
       btn.style.fontSize = '2em';
-    } else if (game.id === 'duckduckduckduck') {
-      btn.textContent = '🦆🦆🦆🦆';
-      btn.title = 'Duck Duck Duck Duck';
-      btn.style.fontSize = '2em';
-    } else {
-      btn.textContent = game.name;
-    }
+            } else if (game.id === 'duckduckduckduck') {
+          btn.textContent = '🦆🦆🦆🦆';
+          btn.title = 'Duck Duck Duck Duck';
+          btn.style.fontSize = '2em';
+        } else if (game.id === 'train') {
+          btn.textContent = '🚂';
+          btn.title = 'Train';
+          btn.style.fontSize = '2em';
+        } else {
+          btn.textContent = game.name;
+        }
     btn.onclick = () => loadGame(game);
     gameMenu.appendChild(btn);
   });
