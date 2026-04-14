@@ -27,7 +27,6 @@ if ('serviceWorker' in navigator) {
 }
 // Game registry
 const games = [
-  // Dinosaur games
   {
     id: 'maths',
     name: 'Dinosaur Maths Addition',
@@ -48,7 +47,6 @@ const games = [
     name: 'Dinosaur 4',
     module: () => import('./games/dinosaur4.js'),
   },
-  // Duck games
   {
     id: 'letters',
     name: 'Duck Letters',
@@ -64,18 +62,49 @@ const games = [
     name: 'Duck Duck Duck',
     module: () => import('./games/duckduckduck.js'),
   },
-          {
-          id: 'duckduckduckduck',
-          name: 'Duck Duck Duck Duck',
-          module: () => import('./games/duckduckduckduck.js'),
-        },
-        {
-          id: 'train',
-          name: 'Train',
-          module: () => import('./games/train.js'),
-        },
-        // Add more games here
+  {
+    id: 'duckduckduckduck',
+    name: 'Duck Duck Duck Duck',
+    module: () => import('./games/duckduckduckduck.js'),
+  },
+  {
+    id: 'train',
+    name: 'Train',
+    module: () => import('./games/train.js'),
+  },
+  {
+    id: 'multiplication',
+    name: 'Dinosaur Multiplication',
+    module: () => import('./games/multiplication.js'),
+  },
+  {
+    id: 'division',
+    name: 'Dinosaur Division',
+    module: () => import('./games/division.js'),
+  },
+  {
+    id: 'combined',
+    name: 'Combined Multiplication & Division',
+    module: () => import('./games/combined.js'),
+  },
+  // Add more games here
 ];
+
+// Game descriptions for homescreen
+const gameDescriptions = {
+  maths: 'add numbers',
+  multiplication: 'times tables (2s, 5s, 10s)',
+  division: 'times tables (2s, 5s, 10s)',
+  combined: 'multiply and divide',
+  dinosaur2: 'Spell words like \'cat\' and \'dog\'.',
+  dinosaur3: 'add, subtract and multiply',
+  dinosaur4: 'Trace letters and learn ABCs.',
+  letters: 'Find letters A to Z with pictures.',
+  counting: 'Count animals up to 12.',
+  duckduckduck: 'Tap ducks to make them splash.',
+  duckduckduckduck: 'Draw straight lines and shapes.',
+  train: 'Drive the train through mazes.',
+};
 
 const gameMenu = document.getElementById('game-menu');
 const gameContainer = document.getElementById('game-container');
@@ -96,45 +125,52 @@ function renderMenu() {
   gameMenu.innerHTML = '';
   games.forEach(game => {
     const btn = document.createElement('button');
+    btn.className = 'game-button';
+    btn.title = game.name;
+    btn.setAttribute('aria-label', gameDescriptions[game.id] || game.name);
+
+    // Create icon element
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'game-icon';
+    let emoji = '';
     if (game.id === 'maths') {
-      btn.textContent = '🦖';
-      btn.title = 'Dinosaur Maths Addition';
-      btn.style.fontSize = '2em';
+      emoji = '🦖';
+    } else if (game.id === 'multiplication') {
+      emoji = '🦈✕';
+    } else if (game.id === 'division') {
+      emoji = '🦕÷';
+    } else if (game.id === 'combined') {
+      emoji = '🦈🦕';
     } else if (game.id === 'dinosaur2') {
-      btn.textContent = '🦖2';
-      btn.title = 'Dinosaur 2';
-      btn.style.fontSize = '2em';
+      emoji = '🦖2';
     } else if (game.id === 'dinosaur3') {
-      btn.textContent = '🦖3';
-      btn.title = 'Dinosaur 3';
-      btn.style.fontSize = '2em';
+      emoji = '🦖3';
     } else if (game.id === 'dinosaur4') {
-      btn.textContent = '🦖4';
-      btn.title = 'Dinosaur 4';
-      btn.style.fontSize = '2em';
+      emoji = '🦖4';
     } else if (game.id === 'letters') {
-      btn.textContent = '🦆';
-      btn.title = 'Duck Letters';
-      btn.style.fontSize = '2em';
+      emoji = '🦆';
     } else if (game.id === 'counting') {
-      btn.textContent = '🦆🦆';
-      btn.title = 'Duck Duck';
-      btn.style.fontSize = '2em';
+      emoji = '🦆🦆';
     } else if (game.id === 'duckduckduck') {
-      btn.textContent = '🦆🦆🦆';
-      btn.title = 'Duck Duck Duck';
-      btn.style.fontSize = '2em';
-            } else if (game.id === 'duckduckduckduck') {
-          btn.textContent = '🦆🦆🦆🦆';
-          btn.title = 'Duck Duck Duck Duck';
-          btn.style.fontSize = '2em';
-        } else if (game.id === 'train') {
-          btn.textContent = '🚂';
-          btn.title = 'Train';
-          btn.style.fontSize = '2em';
-        } else {
-          btn.textContent = game.name;
-        }
+      emoji = '🦆🦆🦆';
+    } else if (game.id === 'duckduckduckduck') {
+      emoji = '🦆🦆🦆🦆';
+    } else if (game.id === 'train') {
+      emoji = '🚂';
+    } else {
+      emoji = game.name;
+    }
+    iconDiv.textContent = emoji;
+
+    // Create description element
+    const descP = document.createElement('p');
+    descP.className = 'game-description';
+    descP.textContent = gameDescriptions[game.id] || 'Play this fun game!';
+
+    // Append to button
+    btn.appendChild(iconDiv);
+    btn.appendChild(descP);
+
     btn.onclick = () => loadGame(game);
     gameMenu.appendChild(btn);
   });
