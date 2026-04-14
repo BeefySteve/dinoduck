@@ -3,7 +3,7 @@
 A Progressive Web App (PWA) featuring 12 mini-games designed for children aged 2-7 years old. Built with a "vibe coded" philosophy - creative, fun, and child-friendly development that prioritizes engagement over perfection.
 
 ## 🌐 Live Demo
-[https://dinoduck.games/](https://dinoduck.games/)
+[https://https://beefysteve.github.io/dinoduck/](https://beefysteve.github.io/dinoduck/)
 
 ## 🎯 Educational Focus
 DinoDuck helps young learners develop essential skills through play:
@@ -39,7 +39,7 @@ DinoDuck helps young learners develop essential skills through play:
 ### Installation Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/dinoduck.git
+   git clone https://github.com/BeefySteve/dinoduck.git
    cd dinoduck
    ```
 
@@ -101,4 +101,4 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🙏 Acknowledgments
 
-Built with love for young learners everywhere. Special thanks to the educational gaming community for inspiration and best practices.
+Built with love for young learners everywhere. Thanks to the little dinosaurs that inspired me to make these. Special thanks to the educational gaming community for inspiration and best practices.
